@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Create Profile</title>
+  <style>
+    body { font-family:sans-serif; background:#0d1117; color:#e6edf3; display:flex; justify-content:center; padding:40px; }
+    form { background:#161b22; padding:20px; border-radius:12px; width:300px; }
+    input, textarea { width:100%; margin:8px 0; padding:8px; border-radius:6px; border:1px solid #30363d; background:#0d1117; color:#e6edf3; }
+    button { width:100%; padding:10px; border:none; border-radius:6px; background:#238636; color:white; font-weight:bold; cursor:pointer; }
+    #result { margin-top:12px; word-break:break-all; }
+  </style>
+</head>
+<body>
+  <form id="profileForm">
+    <input id="name" placeholder="Name" required>
+    <input id="handle" placeholder="Handle" required>
+    <input id="avatar" placeholder="Avatar URL">
+    <textarea id="bio" placeholder="Bio"></textarea>
+    <input id="link1" placeholder="Link 1 URL">
+    <input id="link2" placeholder="Link 2 URL">
+    <button type="submit">Generate Profile</button>
+    <div id="result"></div>
+  </form>
+
+  <script>
+    const backend = "https://YOUR-RAILWAY-APP.up.railway.app"; // replace with your Railway URL
+
+    document.getElementById("profileForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById("name").value,
+        handle: document.getElementById("handle").value,
+        avatar: document.getElementById("avatar").value,
+        bio: document.getElementById("bio").value,
+        links: [document.getElementById("link1").value, document.getElementById("link2").value].filter(Boolean)
+      };
+      const res = await fetch(backend + "/create", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      document.getElementById("result").innerHTML = `
+        <p>Your profile link:</p>
+        <a href="${json.url}" target="_blank">${json.url}</a>
+      `;
+    });
+  </script>
+</body>
+</html>
